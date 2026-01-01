@@ -1,0 +1,12 @@
+<h2>Available Plans</h2>
+<table>
+  <tr><th>Name</th><th>Price</th><th>Duration</th><th>Data Limit</th></tr>
+  {% for plan in plans %}
+  <tr>
+    <td>{{ plan.name }}</td>
+    <td>{{ plan.price }}</td>
+    <td>{{ plan.duration_days }} days</td>
+    <td>{{ plan.data_limit_mb }} MB</td>
+  </tr>
+  {% endfor %}
+</table>

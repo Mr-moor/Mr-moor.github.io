@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white">
+      <h4>Transaction Details</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>ID:</strong> {{ txn.id }}</p>
+      <p><strong>User ID:</strong> {{ txn.user_id }}</p>
+      <p><strong>Phone:</strong> {{ txn.phone }}</p>
+      <p><strong>Amount:</strong> Ksh {{ txn.amount }}</p>
+      <p><strong>Status:</strong> {{ txn.status }}</p>
+      <p><strong>Timestamp:</strong> {{ txn.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+      <p><strong>Mpesa Receipt:</strong> {{ txn.mpesa_receipt or 'Not available' }}</p>
+      <p><strong>Checkout Request ID:</strong> {{ txn.checkout_request_id }}</p>
+      <p><strong>Merchant Request ID:</strong> {{ txn.merchant_request_id }}</p>
+    </div>
+    <div class="card-footer">
+      <a href="{{ url_for('admin_transactions') }}" class="btn btn-secondary">Back to Transactions</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

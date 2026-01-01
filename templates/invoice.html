@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex gap-2 mb-3">
+    <button class="btn btn-dark" onclick="window.print()">🖨️ Print</button>
+    <button class="btn btn-primary" onclick="downloadCSV()">📥 Download CSV</button>
+    <button class="btn btn-success" onclick="sharePage()">📤 Share</button>
+</div>
+
+<div class="container py-4">
+  <h2 class="mb-4">All Invoices</h2>
+
+  {% if invoices %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for invoice in invoices %}
+      <div class="col">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-body">
+            <h5 class="card-title">Invoice #{{ invoice.id }}</h5>
+            <p><strong>User:</strong> {{ invoice.user_name or 'N/A' }}</p>
+            <p><strong>Amount:</strong> {{ invoice.amount }} KES</p>
+            <p><strong>Date:</strong> {{ invoice.date.strftime('%Y-%m-%d') if invoice.date else 'Unknown' }}</p>
+            <a href="{{ url_for('admin_bp.view_invoice', invoice_id=invoice.id) }}" class="btn btn-outline-primary w-100 rounded-pill">
+              View Details
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted mt-3">No invoices found.</p>
+  {% endif %}
+</div>
+{% endblock %}
+
+<script>
+function downloadCSV() {
+    let table = document.querySelector("table");
+    let rows = table.querySelectorAll("tr");
+    let csv = [];
+
+    rows.forEach(row => {
+        let cols = row.querySelectorAll("td, th");
+        let rowData = [];
+        cols.forEach(col => rowData.push(col.innerText));
+        csv.push(rowData.join(","));
+    });
+
+    let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+    let link = document.createElement("a");
+    link.download = "invoices.csv";
+    link.href = URL.createObjectURL(csvFile);
+    link.click();
+}
+
+function sharePage() {
+    if (navigator.share) {
+        navigator.share({
+            title: document.title,
+            text: "Check this dashboard.",
+            url: window.location.href
+        });
+    } else {
+        alert("Sharing not supported. Copy the link manually.");
+    }
+}
+</script>

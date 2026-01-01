@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-3">Unpaid Invoices</h3>
+
+    <div class="d-flex gap-2 mb-3">
+        <button class="btn btn-dark" onclick="window.print()">🖨️ Print</button>
+        <button class="btn btn-primary" onclick="downloadCSV()">📥 Download CSV</button>
+        <button class="btn btn-success" onclick="sharePage()">📤 Share</button>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>User</th>
+                <th>Amount</th>
+                <th>Due Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+                <tr>
+                    <td>{{ invoice.user.username }}</td>
+                    <td>KES {{ invoice.amount }}</td>
+                    <td>{{ invoice.due_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ invoice.status }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function downloadCSV() {
+    let table = document.querySelector("table");
+    let rows = table.querySelectorAll("tr");
+    let csv = [];
+
+    rows.forEach(row => {
+        let cols = row.querySelectorAll("td, th");
+        let rowData = [];
+        cols.forEach(col => rowData.push(col.innerText));
+        csv.push(rowData.join(","));
+    });
+
+    let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+    let link = document.createElement("a");
+    link.download = "unpaid_invoices.csv";
+    link.href = URL.createObjectURL(csvFile);
+    link.click();
+}
+
+function sharePage() {
+    if (navigator.share) {
+        navigator.share({
+            title: "Unpaid Invoices",
+            url: window.location.href
+        });
+    } else {
+        alert("Sharing is not supported on this device.");
+    }
+}
+</script>
+{% endblock %}

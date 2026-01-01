@@ -1,0 +1,94 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📊 Admin Billing Dashboard</h2>
+    <a href="{{ url_for('admin_bp.run_billing') }}" class="btn btn-primary shadow-sm">⚙️ Run Billing Cycle</a>
+  </div>
+
+  <!-- Load Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+  <!-- Summary Cards -->
+<div style="text-align: center; margin: 20px;">
+    <a href="{{ url_for('admin_bp.add_plan') }}" 
+       class="btn btn-primary"
+       style="padding: 10px 20px; font-size: 16px; border-radius: 8px; background-color: #007bff; text-decoration: none;">
+       ➕ Add Plan
+    </a>
+</div>
+
+<div class="dashboard-grid">
+
+    <!-- Total Revenue -->
+    <a href="{{ url_for('admin_bp.view_revenue') }}" style="text-decoration:none;">
+        <div class="modern-card" style="background: linear-gradient(135deg, #28a745, #66d17a);">
+            <div class="card-title">Total Revenue</div>
+            <div class="card-number">KES {{ total_revenue }}</div>
+            <div class="card-icon"><i class="fas fa-coins"></i></div>
+        </div>
+    </a>
+
+    <!-- Unpaid Invoices -->
+    <a href="{{ url_for('admin_bp.view_unpaid') }}" style="text-decoration:none;">
+        <div class="modern-card" style="background: linear-gradient(135deg, #ffc107, #ffe58a); color:#000;">
+            <div class="card-title">Unpaid Invoices</div>
+            <div class="card-number">{{ unpaid_invoices|length }}</div>
+            <div class="card-icon"><i class="fas fa-exclamation-circle"></i></div>
+        </div>
+    </a>
+
+    <!-- Overdue -->
+    <a href="{{ url_for('admin_bp.view_overdue') }}" style="text-decoration:none;">
+        <div class="modern-card" style="background: linear-gradient(135deg, #dc3545, #f58b8b);">
+            <div class="card-title">Overdue</div>
+            <div class="card-number">{{ overdue_invoices|length }}</div>
+            <div class="card-icon"><i class="fas fa-times-circle"></i></div>
+        </div>
+    </a>
+
+    <!-- Total Users -->
+    <a href="{{ url_for('admin_bp.view_users') }}" style="text-decoration:none;">
+        <div class="modern-card" style="background: linear-gradient(135deg, #17a2b8, #6bd5e1);">
+            <div class="card-title">Total Users</div>
+            <div class="card-number">{{ users|length }}</div>
+            <div class="card-icon"><i class="fas fa-users"></i></div>
+        </div>
+    </a>
+
+</div>
+
+<div class="dashboard-grid mt-4">
+
+  <!-- Recent Invoices -->
+  <a href="{{ url_for('admin_bp.view_recent_invoices') }}" style="text-decoration: none;">
+    <div class="modern-card" style="background: linear-gradient(135deg, #6c757d, #adb5bd);">
+      <div class="card-title">Recent Invoices</div>
+      <div class="card-number">{{ invoices|length }}</div>
+      <div class="card-icon"><i class="fas fa-file-invoice"></i></div>
+    </div>
+  </a>
+
+  <!-- Active Subscriptions -->
+  <a href="{{ url_for('admin_bp.view_active_subscriptions') }}" style="text-decoration: none;">
+    <div class="modern-card" style="background: linear-gradient(135deg, #20c997, #70e1c7);">
+      <div class="card-title">Active Subscriptions</div>
+      <div class="card-number">{{ total_active_subscriptions }}</div>
+      <div class="card-icon"><i class="fas fa-user-check"></i></div>
+    </div>
+  </a>
+
+  <!-- Bandwidth Control -->
+  <a href="{{ url_for('admin_bp.view_bandwidth_control') }}" style="text-decoration: none;">
+    <div class="modern-card" style="background: linear-gradient(135deg, #17a2b8, #80d8e6);">
+      <div class="card-title">Bandwidth Control</div>
+      <div class="card-number">{{ users|length }}</div>
+      <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+    </div>
+  </a>
+
+</div>
+{% endblock %}
+

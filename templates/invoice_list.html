@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="invoice-container p-4 bg-light rounded mt-5">
+    <h2>{{ title }}</h2>
+
+    {% if invoices %}
+        {% for invoice in invoices %}
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <h5>Invoice #{{ invoice.id }}</h5>
+                <p><strong>User:</strong> {{ invoice.user.name }} ({{ invoice.user.phone }})</p>
+                <p><strong>Email:</strong> {{ invoice.user.email }}</p>
+                <p><strong>Plan:</strong> {{ invoice.subscription.plan.name }}</p>
+                <p><strong>Amount:</strong> KES {{ invoice.amount }}</p>
+                <p><strong>Status:</strong>
+                    {% if invoice.status == 'Paid' %}
+                    <span class="badge bg-success">Paid</span>
+                    {% else %}
+                    <span class="badge bg-warning text-dark">Unpaid</span>
+                    {% endif %}
+                </p>
+                <p><strong>Generated:</strong> {{ invoice.generated_at.strftime('%Y-%m-%d') }}</p>
+                <p><strong>Due Date:</strong> {{ invoice.due_date.strftime('%Y-%m-%d') }}</p>
+
+                <div class="mt-3">
+                    <button onclick="window.print()" class="btn btn-primary btn-sm">Print</button>
+                    <button onclick="alert('Share link copied!')" class="btn btn-secondary btn-sm">Share</button>
+                    <button onclick="alert('Invoice saved as PDF!')" class="btn btn-success btn-sm">Save</button>
+
+                    {% if session['role'] == 'Admin' %}
+                    <a href="{{ url_for('admin_bp.mark_invoice_paid', invoice_id=invoice.id) }}" class="btn btn-outline-success btn-sm">Mark as Paid</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted mt-3">No invoices found.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

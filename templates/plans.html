@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Available Wi-Fi Plans</h2>
+
+  <div class="row">
+    {% for plan in plans %}
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ plan.name }}</h5>
+            <p class="card-text">Speed: <strong>{{ plan.speed }}</strong> Mbps</p>
+            <p class="card-text">Price: <strong>Ksh {{ plan.price }}</strong> / month</p>
+
+            <a href="{{ url_for('buy_plan', plan_id=plan.id) }}" class="btn btn-primary">
+              Subscribe
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

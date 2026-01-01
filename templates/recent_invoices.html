@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">📜 Recent Invoices</h2>
+  <div class="table-responsive shadow-sm rounded-4">
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Plan</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Generated</th>
+          <th>Due</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inv in invoices %}
+        <tr>
+          <td>{{ inv.id }}</td>
+          <td>{{ inv.user.name if inv.user else "—" }}</td>
+          <td>{{ inv.subscription.plan.name if inv.subscription else "—" }}</td>
+          <td>KES {{ inv.amount }}</td>
+          <td>
+            {% if inv.status == 'Paid' %}
+              <span class="badge bg-success">Paid</span>
+            {% elif inv.due_date < current_time %}
+              <span class="badge bg-danger">Overdue</span>
+            {% else %}
+              <span class="badge bg-warning text-dark">Unpaid</span>
+            {% endif %}
+          </td>
+          <td>{{ inv.generated_at.strftime('%Y-%m-%d') }}</td>
+          <td>{{ inv.due_date.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted">No invoices.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
