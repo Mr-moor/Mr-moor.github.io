@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - WiFinity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Welcome to WiFinite</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            <label>Phone Number:</label>
+            <input type="text" name="phone" placeholder="Enter your phone" required>
+
+            <label>Password:</label>
+            <input type="password" name="password" placeholder="Enter password" required>
+
+            <button type="submit">Login</button>
+        </form>
+        <p class="note">Don’t have an account? Contact admin for registration.</p>
+    </div>
+</body>
+</html>

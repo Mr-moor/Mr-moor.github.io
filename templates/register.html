@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - WiFinity</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1a237e, #0d47a1, #26c6da);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #fff;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .auth-container:hover {
+      transform: translateY(-5px);
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      color: #e3f2fd;
+    }
+
+    h2 span {
+      color: #26c6da;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #e1f5fe;
+      font-size: 0.95rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      margin-bottom: 18px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    input:focus {
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 0 2px #26c6da;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #26c6da, #00bcd4);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #00acc1, #00838f);
+      transform: scale(1.03);
+    }
+
+    .note {
+      margin-top: 18px;
+      font-size: 0.95rem;
+      color: #e3f2fd;
+    }
+
+    .note a {
+      color: #26c6da;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .note a:hover {
+      color: #00e5ff;
+    }
+
+    .alert {
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .alert-success {
+      background: rgba(76, 175, 80, 0.2);
+      color: #b9f6ca;
+    }
+
+    .alert-error {
+      background: rgba(244, 67, 54, 0.2);
+      color: #ffcdd2;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container fade-in">
+    <h2>Create Your <span>WiFinity</span> Account</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('register') }}">
+      <label>Full Name</label>
+      <input type="text" name="name" placeholder="Enter your full name" required>
+
+      <label>Phone Number</label>
+      <input type="text" name="phone" placeholder="e.g. 0712345678" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Enter your password" required>
+
+      <label>Confirm Password</label>
+      <input type="password" name="confirm_password" placeholder="Confirm password" required>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p class="note">
+      Already have an account?
+      <a href="{{ url_for('login') }}">Login here</a>
+    </p>
+  </div>
+</body>
+</html>

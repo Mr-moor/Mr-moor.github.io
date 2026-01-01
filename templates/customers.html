@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Customers / Transactions</h3>
+
+<form class="row g-2 mb-3" method="post">
+  <div class="col-auto">
+    <input name="phone" class="form-control" placeholder="Search by phone (e.g. 2547...)" value="{{ phone }}">
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary">Search</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('customers') }}">Clear</a>
+  </div>
+</form>
+
+{% if transactions %}
+  <table class="table table-striped">
+    <thead><tr><th>ID</th><th>Phone</th><th>Amount</th><th>Status</th><th>Time</th></tr></thead>
+    <tbody>
+      {% for t in transactions %}
+      <tr>
+        <td>{{ t.id }}</td>
+        <td>{{ t.phone }}</td>
+        <td>Ksh {{ '%.2f'|format(t.amount) }}</td>
+        <td>{{ t.status }}</td>
+        <td>{{ t.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="text-muted">No transactions. Try searching by phone number.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3>Add New Plan</h3>
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Plan Name</label>
+      <input type="text" name="name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Speed (Mbps)</label>
+      <input type="number" name="speed" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Price (KES)</label>
+      <input type="number" name="price" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+  <label class="form-label">Download Speed (Mbps)</label>
+  <input type="number" name="download_speed" class="form-control">
+</div>
+<div class="mb-3">
+  <label class="form-label">Upload Speed (Mbps)</label>
+  <input type="number" name="upload_speed" class="form-control">
+</div>
+
+<div class="mb-3">
+  <label class="form-label">Data Quota (GB)</label>
+  <input type="number" name="data_quota" step="0.01" class="form-control">
+</div>
+
+    <div class="mb-3">
+      <label class="form-label">Connection Type</label>
+      <select name="connection_type" class="form-control" required>
+        <option value="">-- Select Type --</option>
+        <option value="fiber">Fiber</option>
+        <option value="wireless">Wireless</option>
+        <option value="cable">Cable</option>
+      </select>
+    </div>
+
+    <button class="btn btn-success">Save Plan</button>
+    <a href="{{ url_for('admin_bp.dashboard_data') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

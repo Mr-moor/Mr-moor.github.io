@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap mb-5">
+    <div>
+      <h2 class="fw-bold text-primary">
+        👋 Welcome, {{ user.name or user.phone }}
+      </h2>
+      <p class="text-muted mb-0">Enhancing your connection — one plan at a time.</p>
+    </div>
+    <div>
+      <a href="{{ url_for('logout') }}" class="btn btn-outline-danger rounded-pill">
+        <i class="bi bi-box-arrow-right me-1"></i> Logout
+      </a>
+    </div>
+  </div>
+
+  <!-- OVERVIEW CARDS -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 text-center p-3 h-100">
+        <div class="card-body">
+          <i class="bi bi-wifi display-6 text-primary mb-2"></i>
+          <h6 class="fw-semibold text-muted mb-1">Current Plan</h6>
+          <h5 class="fw-bold text-dark">
+            {% if subscription %}{{ subscription.plan.name }}{% else %}None{% endif %}
+          </h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 text-center p-3 h-100">
+        <div class="card-body">
+          <i class="bi bi-calendar-check display-6 text-success mb-2"></i>
+          <h6 class="fw-semibold text-muted mb-1">Days Remaining</h6>
+          <h5 class="fw-bold text-dark">
+            {% if subscription %}{{ subscription.days_remaining() }}{% else %}-{% endif %}
+          </h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 text-center p-3 h-100">
+        <div class="card-body">
+          <i class="bi bi-receipt display-6 text-warning mb-2"></i>
+          <h6 class="fw-semibold text-muted mb-1">Total Transactions</h6>
+          <h5 class="fw-bold text-dark">{{ txns|length or 0 }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="row g-4">
+
+    <!-- LEFT COLUMN -->
+    <div class="col-lg-8">
+
+      <!-- ACTIVE SUBSCRIPTION -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <h5 class="fw-bold text-success mb-3">
+            <i class="bi bi-wifi me-2"></i> My Active Plan
+          </h5>
+          {% if subscription %}
+            <ul class="list-unstyled small mb-0">
+              <li><strong>Plan:</strong> {{ subscription.plan.name }}</li>
+              <li><strong>Status:</strong>
+                {% if subscription.active %}
+                  <span class="badge bg-success">Active</span>
+                {% else %}
+                  <span class="badge bg-secondary">Inactive</span>
+                {% endif %}
+              </li>
+              <li><strong>Ends:</strong> {{ subscription.end_at.strftime('%Y-%m-%d') }}</li>
+              <li><strong>Days Left:</strong> {{ subscription.days_remaining() }}</li>
+            </ul>
+          {% else %}
+            <p class="text-muted mb-0">No active plan. Choose one below.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- AVAILABLE PLANS -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <h5 class="fw-bold text-primary mb-3">
+            <i class="bi bi-lightning-charge me-2"></i> Available Plans
+          </h5>
+
+          {% if plans %}
+            <div class="row">
+              {% for p in plans %}
+              <div class="col-md-6 mb-3">
+                <div class="card border-0 shadow-sm plan-card h-100 text-center p-3">
+                  <h6 class="fw-bold text-dark">{{ p.name }}</h6>
+                  <p class="small text-muted mb-1">{{ p.speed or 10 }} Mbps</p>
+                  <p class="fw-semibold text-primary mb-3">KES {{ p.price }}</p>
+
+                  <!-- ✅ STK Payment Form -->
+                  <form action="{{ url_for('initiate_payment') }}" method="POST">
+    <input type="hidden" name="plan_id" value="{{ p.id }}">
+    <button type="submit" class="btn btn-primary">
+        Buy Plan (Ksh {{ p.price }})
+    </button>
+</form>
+
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-muted mb-0">No plans available currently.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- RECENT TRANSACTIONS -->
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="fw-bold text-primary mb-3">
+            <i class="bi bi-receipt-cutoff me-2"></i> Recent Transactions
+          </h5>
+          {% if txns %}
+          <div class="table-responsive">
+            <table class="table table-sm align-middle table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>ID</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for t in txns %}
+                <tr>
+                  <td>#{{ t.id }}</td>
+                  <td>KES {{ t.amount }}</td>
+                  <td>
+                    {% if t.status == 'Completed' %}
+                      <span class="badge bg-success">{{ t.status }}</span>
+                    {% elif t.status == 'Pending' %}
+                      <span class="badge bg-warning text-dark">{{ t.status }}</span>
+                    {% else %}
+                      <span class="badge bg-danger">{{ t.status }}</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ t.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+            <p class="text-muted mb-0">No recent transactions found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="col-lg-4">
+
+      <!-- QUICK ACTIONS -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <h6 class="fw-bold text-primary mb-3">
+            <i class="bi bi-lightning-fill me-2"></i> Quick Actions
+          </h6>
+          <a href="{{ url_for('admin_bp.view_invoices') }}" class="btn btn-outline-success w-100 mb-2 rounded-pill">
+            <i class="bi bi-file-earmark-text me-1"></i> My Invoices
+          </a>
+          <a href="{{ url_for('support_page') }}" class="btn btn-outline-secondary w-100 rounded-pill">
+            <i class="bi bi-chat-left-dots me-1"></i> Contact Support
+          </a>
+        </div>
+      </div>
+
+      <!-- INFO CARD -->
+      <div class="alert alert-info border-0 shadow-sm small">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        You can manage subscriptions, view payments, or reach out to support here.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STYLES -->
+<style>
+  body { background-color: #f9fafc; }
+  .plan-card:hover {
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+  .alert-info { background: #e3f2fd; color: #0d47a1; }
+</style>
+{% endblock %}

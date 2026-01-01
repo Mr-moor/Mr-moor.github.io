@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">All Transactions</h2>
+  <table class="table table-bordered table-striped shadow-sm">
+    <thead class="table-primary">
+      <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Phone</th>
+        <th>Amount (Ksh)</th>
+        <th>Status</th>
+        <th>Timestamp</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for txn in transactions %}
+      <tr>
+        <td>{{ txn.id }}</td>
+        <td>{{ txn.user_id }}</td>
+        <td>{{ txn.phone }}</td>
+        <td>{{ txn.amount }}</td>
+        <td>
+          <span class="badge {% if txn.status == 'Completed' %}bg-success{% elif txn.status == 'Pending' %}bg-warning{% else %}bg-danger{% endif %}">
+            {{ txn.status }}
+          </span>
+        </td>
+        <td>{{ txn.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        <td>
+          <a href="{{ url_for('admin_transaction_detail', txn_id=txn.id) }}" class="btn btn-info btn-sm">View</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

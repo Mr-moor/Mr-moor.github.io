@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-danger">⚠️ Overdue Invoices</h2>
+
+    <div class="btn-group">
+        <!-- Download CSV -->
+        <a href="{{ url_for('admin_bp.download_overdue') }}" 
+           class="btn btn-success shadow-sm rounded-3">
+            ⬇ Download
+        </a>
+
+        <!-- Print -->
+        <button onclick="window.print()" 
+                class="btn btn-primary shadow-sm rounded-3">
+            🖨 Print
+        </button>
+
+        <!-- Share (copy link) -->
+        <button class="btn btn-info shadow-sm rounded-3 text-white" 
+                onclick="copyShareLink()">
+            🔗 Share
+        </button>
+    </div>
+</div>
+
+<div class="container mt-4">
+
+    <!-- Page Title -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{{ url_for('admin_bp.dashboard') }}" class="btn btn-secondary rounded-3 shadow-sm">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Overdue Table -->
+    <div class="table-responsive shadow-sm rounded-4">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Plan</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Generated At</th>
+                    <th>Due Date</th>
+                    <th>Mark Paid</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if overdue_invoices %}
+                    {% for invoice in overdue_invoices %}
+                        <tr>
+                            <td>{{ invoice.id }}</td>
+                            <td>{{ invoice.user.name if invoice.user else "—" }}</td>
+                            <td>{{ invoice.subscription.plan.name if invoice.subscription else "—" }}</td>
+                            <td>KES {{ invoice.amount }}</td>
+
+                            <!-- Status Badge -->
+                            <td>
+                                <span class="badge bg-danger">Overdue</span>
+                            </td>
+
+                            <td>{{ invoice.generated_at.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ invoice.due_date.strftime('%Y-%m-%d') }}</td>
+
+                            <td>
+                                <a href="{{ url_for('admin_bp.mark_invoice_paid', invoice_id=invoice.id) }}" 
+                                   class="btn btn-sm btn-success rounded-pill">
+                                   Mark Paid
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-3">
+                            No overdue invoices found.
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}
+
+<script>
+function copyShareLink() {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Share link copied!");
+}
+</script>
+

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center">
+  <h4>Payment Initiated</h4>
+  <p>Transaction ID: {{ txn.id }}</p>
+  <p>Status: {{ txn.status }}</p>
+  <a class="btn btn-primary" href="{{ url_for('user_home', phone=txn.phone) }}">Back to Home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Payment initiated</h4>
+    <p>Transaction ID: <strong>{{ txn.id }}</strong></p>
+    <p>Phone: <strong>{{ txn.phone }}</strong></p>
+    <p>Amount: <strong>Ksh {{ txn.amount }}</strong></p>
+    <p>Status: <strong>{{ txn.status }}</strong></p>
+    <a href="{{ url_for('index') }}" class="btn btn-success">Back to home</a>
+  </div>
+</div>
+{% endblock %}
